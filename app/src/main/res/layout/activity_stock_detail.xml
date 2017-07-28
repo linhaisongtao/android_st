@@ -34,7 +34,7 @@
                         android:gravity="center_vertical"
                         android:text="Pb"
                         android:textColor="@android:color/white"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -82,7 +82,7 @@
                         android:gravity="center_vertical"
                         android:text="Roe"
                         android:textColor="@android:color/white"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -130,7 +130,7 @@
                         android:gravity="center_vertical"
                         android:text="Benefit"
                         android:textColor="@android:color/white"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"/>
 
                     <TextView

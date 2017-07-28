@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -67,7 +68,7 @@ public class SListActivity extends AppCompatActivity {
                 final SBasicInfo info = (SBasicInfo) parent.getItemAtPosition(position);
                 new AlertDialog.Builder(view.getContext())
                         .setTitle("TIPS")
-                        .setMessage("delete " + info.name + "[" + info.code + "]?")
+                        .setMessage("about " + info.name + "[" + info.code + "]")
                         .setPositiveButton("delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -89,10 +90,24 @@ public class SListActivity extends AppCompatActivity {
                                 dialog.dismiss();
                             }
                         })
-                        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("to top", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
+                                Observable.create(new ObservableOnSubscribe<Object>() {
+                                    @Override
+                                    public void subscribe(ObservableEmitter<Object> e) throws Exception {
+                                        StockManager.getStockManager().deleteSBasicInfo(info.code);
+                                        StockManager.getStockManager().addSBasicInfo(info);
+                                        e.onNext("to top success");
+                                    }
+                                }).subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(new Consumer<Object>() {
+                                            @Override
+                                            public void accept(Object o) throws Exception {
+                                                Toast.makeText(SListActivity.this, String.valueOf(o), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                             }
                         })
                         .show();

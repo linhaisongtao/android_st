@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,45 +12,56 @@
         <com.netease.bobo.pathdemo.PathView
             android:id="@+id/mPathView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <View
             android:id="@+id/mDotView"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:background="@drawable/red_circle"/>
+            android:background="@drawable/red_circle" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:gravity="center"
                 android:onClick="onDetailViewClicked"
                 android:text="去Detail"
                 android:textSize="16sp"
-                android:textStyle="bold|italic"/>
+                android:textStyle="bold|italic" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:gravity="center"
                 android:onClick="onClearCacheClicked"
                 android:text="clear cache data"
                 android:textSize="16sp"
-                android:textStyle="bold|italic"/>
+                android:textStyle="bold|italic" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:gravity="center"
                 android:onClick="onToListClicked"
                 android:text="To List"
                 android:textSize="16sp"
-                android:textStyle="bold|italic"/>
+                android:textStyle="bold|italic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:onClick="onStockSettingClicked"
+                android:text="Stock Setting"
+                android:textSize="16sp"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
 

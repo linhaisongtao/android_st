@@ -2,6 +2,8 @@ package com.netease.bobo.pathdemo;
 
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.os.Build;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 
 import com.netease.bobo.pathdemo.stock.detail.StockDetailActivity;
 import com.netease.bobo.pathdemo.stock.list.SListActivity;
+import com.netease.bobo.pathdemo.stock.setting.StockSettingActivity;
 import com.netease.bobo.pathdemo.util.FileUtil;
 
 import io.reactivex.Observable;
@@ -38,25 +41,6 @@ public class MainActivity extends AppCompatActivity {
                 startAnimator();
             }
         });
-
-        Observable.create(new ObservableOnSubscribe<Path>() {
-            @Override
-            public void subscribe(ObservableEmitter<Path> e) throws Exception {
-                Path path = new Path();
-                path.moveTo(0, 0);
-                for (int i = 0; i < 100; i++) {
-                    path.lineTo(10 * i, 500 + 300 * (float) Math.sin(i));
-                }
-                e.onNext(path);
-            }
-        }).subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Path>() {
-                    @Override
-                    public void accept(Path path) throws Exception {
-                        mPathView.setPath(path);
-                    }
-                });
 
     }
 
@@ -85,23 +69,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClearCacheClicked(View view) {
-        Observable.create(new ObservableOnSubscribe<Object>() {
-            @Override
-            public void subscribe(ObservableEmitter<Object> e) throws Exception {
-                FileUtil.clearAll();
-                e.onNext("clear cache success");
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Object>() {
+        new AlertDialog.Builder(view.getContext())
+                .setTitle("TIPS")
+                .setMessage("clear cache ?")
+                .setPositiveButton("clear", new DialogInterface.OnClickListener() {
                     @Override
-                    public void accept(Object o) throws Exception {
-                        Toast.makeText(MainActivity.this, String.valueOf(o), Toast.LENGTH_SHORT).show();
+                    public void onClick(DialogInterface dialog, int which) {
+                        Observable.create(new ObservableOnSubscribe<Object>() {
+                            @Override
+                            public void subscribe(ObservableEmitter<Object> e) throws Exception {
+                                FileUtil.clearAll();
+                                e.onNext("clear cache success");
+                            }
+                        }).subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Consumer<Object>() {
+                                    @Override
+                                    public void accept(Object o) throws Exception {
+                                        Toast.makeText(MainActivity.this, String.valueOf(o), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                        dialog.dismiss();
                     }
-                });
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+
     }
 
     public void onToListClicked(View view) {
         SListActivity.start(view.getContext());
+    }
+
+    public void onStockSettingClicked(View view) {
+        StockSettingActivity.start(view.getContext());
     }
 }

@@ -71,12 +71,14 @@ public class StockDetailActivity extends AppCompatActivity {
         YAxis y = chart.getAxisLeft();
         y.setGridLineWidth(1);
         y.setGridColor(R.color.transGray);
-        y.setGridDashedLine(new DashPathEffect(new float[]{1f, 2f}, 2f));
+        y.setGridDashedLine(new DashPathEffect(new float[]{1f, 2f}, 5f));
 
         XAxis x = chart.getXAxis();
         x.setGridLineWidth(1);
         x.setGridColor(R.color.transGray);
-        x.setGridDashedLine(new DashPathEffect(new float[]{1f, 2f}, 2f));
+        x.setGridDashedLine(new DashPathEffect(new float[]{1f, 2f}, 5f));
+
+        chart.setTouchEnabled(false);
     }
 
     @Override
@@ -99,12 +101,12 @@ public class StockDetailActivity extends AppCompatActivity {
                     @Override
                     public void accept(StockInfo o) throws Exception {
                         Log.e(TAG, "accept: " + o);
-                        showPbChart(o.getPastYear(StockConfig.PB_YEAR_COUNT), o.getPbPosition(StockConfig.PB_YEAR_COUNT, 0.2f),
-                                o.getPbPosition(StockConfig.PB_YEAR_COUNT, 0.5f), o.getPbPosition(StockConfig.PB_YEAR_COUNT, 0.8f));
-                        showRoeChart(o.getPastRoeYearReporters(StockConfig.ROE_SHOW_YEAR_COUNT), o.getRoeAverageRoe(StockConfig.ROE_SHOW_YEAR_COUNT));
-                        showBenefitChart(StockConfig.BENEFIT_YEAR_COUNT + 1,
-                                (float) (0.01 * o.getRoeAverageRoe(StockConfig.ROE_SHOW_YEAR_COUNT) * StockConfig.FUTURE_ROE_RATIO),
-                                o.getNowPb(), o.getPbPosition(StockConfig.PB_YEAR_COUNT, StockConfig.SELL_PB_POSITION));
+                        showPbChart(o.getPastYear(StockConfig.getStockConfig().PB_YEAR_COUNT), o.getPbPosition(StockConfig.getStockConfig().PB_YEAR_COUNT, 0.2f),
+                                o.getPbPosition(StockConfig.getStockConfig().PB_YEAR_COUNT, 0.5f), o.getPbPosition(StockConfig.getStockConfig().PB_YEAR_COUNT, 0.8f));
+                        showRoeChart(o.getPastRoeYearReporters(StockConfig.getStockConfig().ROE_SHOW_YEAR_COUNT), o.getRoeAverageRoe(StockConfig.getStockConfig().AVERAGE_ROE_COUNT));
+                        showBenefitChart(StockConfig.getStockConfig().BENEFIT_YEAR_COUNT,
+                                (float) (0.01 * o.getRoeAverageRoe(StockConfig.getStockConfig().ROE_SHOW_YEAR_COUNT) * StockConfig.getStockConfig().FUTURE_ROE_RATIO),
+                                o.getNowPb(), o.getPbPosition(StockConfig.getStockConfig().PB_YEAR_COUNT, StockConfig.getStockConfig().SELL_PB_POSITION));
                     }
                 });
     }
@@ -174,6 +176,7 @@ public class StockDetailActivity extends AppCompatActivity {
                             }
                         });
                         makeChartInit(chart);
+                        chart.getAxisLeft().setAxisMinimum(0);
                         chart.setData(lineData);
 
                         TextView mPbDetailTextView = (TextView) findViewById(R.id.mPbDetailTextView);
@@ -193,8 +196,8 @@ public class StockDetailActivity extends AppCompatActivity {
                     roeEntries.add(new Entry(i, roes.get(i).weightedroe));
                 }
                 LineDataSet set = new LineDataSet(roeEntries, "weightedroe");
-                set.setCircleRadius(StockConfig.CIRCLE_RADIUS);
-                set.setCubicIntensity(StockConfig.CUBIC_INTENSITY);
+                set.setCircleRadius(StockConfig.getStockConfig().CIRCLE_RADIUS);
+                set.setCubicIntensity(StockConfig.getStockConfig().CUBIC_INTENSITY);
                 LineData lineData = new LineData();
                 lineData.addDataSet(set);
                 return Observable.just(lineData);
@@ -213,10 +216,11 @@ public class StockDetailActivity extends AppCompatActivity {
                         });
                         makeChartInit(chart);
                         chart.getXAxis().setLabelCount(roes.size(), true);
+                        chart.getAxisLeft().setAxisMinimum(0);
                         chart.setData(lineData);
 
                         TextView mRoeDetailTextView = (TextView) findViewById(R.id.mRoeDetailTextView);
-                        mRoeDetailTextView.setText(String.format("average.roe:%.2f", averageRoe));
+                        mRoeDetailTextView.setText(String.format("average%d.roe:%.2f", StockConfig.getStockConfig().AVERAGE_ROE_COUNT, averageRoe));
                     }
                 });
     }
@@ -237,15 +241,15 @@ public class StockDetailActivity extends AppCompatActivity {
                     sells.add(new Entry(i, (priceSell - pbBuy) / pbBuy));
                 }
                 LineDataSet pureSet = new LineDataSet(pures, "pure");
-                pureSet.setCircleRadius(StockConfig.CIRCLE_RADIUS);
-                pureSet.setCubicIntensity(StockConfig.CUBIC_INTENSITY);
+                pureSet.setCircleRadius(StockConfig.getStockConfig().CIRCLE_RADIUS);
+                pureSet.setCubicIntensity(StockConfig.getStockConfig().CUBIC_INTENSITY);
                 pureSet.setColor(Color.GREEN);
                 pureSet.setValueTextSize(10);
                 sets.add(pureSet);
 
                 LineDataSet sellSet = new LineDataSet(sells, "sells");
-                sellSet.setCircleRadius(StockConfig.CIRCLE_RADIUS);
-                sellSet.setCubicIntensity(StockConfig.CUBIC_INTENSITY);
+                sellSet.setCircleRadius(StockConfig.getStockConfig().CIRCLE_RADIUS);
+                sellSet.setCubicIntensity(StockConfig.getStockConfig().CUBIC_INTENSITY);
                 sellSet.setValueTextSize(10);
                 sets.add(sellSet);
 
