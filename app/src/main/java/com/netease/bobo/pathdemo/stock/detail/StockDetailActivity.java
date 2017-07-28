@@ -3,25 +3,32 @@ package com.netease.bobo.pathdemo.stock.detail;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.netease.bobo.pathdemo.R;
+import com.netease.bobo.pathdemo.stock.StockConfig;
 import com.netease.bobo.pathdemo.stock.model.Pb;
 import com.netease.bobo.pathdemo.stock.model.Roe;
+import com.netease.bobo.pathdemo.stock.model.StockInfo;
+import com.netease.bobo.pathdemo.stock.model.StockManager;
 import com.netease.bobo.pathdemo.widget.LoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -37,49 +44,112 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class StockDetailActivity extends AppCompatActivity {
+    private static final String TAG = "StockDetailActivity";
+
     public static void start(Context context) {
         Intent intent = new Intent(context, StockDetailActivity.class);
         context.startActivity(intent);
+    }
+
+    private static void makeChartInit(LineChart chart) {
+        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        chart.getXAxis().setEnabled(true);
+        chart.getAxisRight().setEnabled(false);
+        Description description = new Description();
+        description.setText("");
+        chart.setDescription(description);
+        chart.setScaleYEnabled(false);
+        chart.animateXY(2000, 2000);
+
+        YAxis y = chart.getAxisLeft();
+        y.setGridLineWidth(1);
+        y.setGridColor(R.color.transGray);
+        y.setGridDashedLine(new DashPathEffect(new float[]{1f, 2f}, 2f));
+
+        XAxis x = chart.getXAxis();
+        x.setGridLineWidth(1);
+        x.setGridColor(R.color.transGray);
+        x.setGridDashedLine(new DashPathEffect(new float[]{1f, 2f}, 2f));
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle("S");
-
         setContentView(R.layout.activity_stock_detail);
 
         showBenefitChart(11, 0.2f, 2f, 1.6f);
 
-        Random random = new Random();
-
-        List<Roe> roes = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            roes.add(new Roe("201" + i, 20 + 5 * random.nextFloat()));
-        }
-        showRoeChart(roes);
-
-
-        List<Pb> pbs = new ArrayList<>();
-        for (int i = 0; i < 200; i++) {
-            pbs.add(new Pb(String.valueOf(i), (float) (10 + 3 * Math.sin(1.0 * i / 100))));
-        }
-        showPbChart(pbs);
+        Observable.create(new ObservableOnSubscribe<StockInfo>() {
+            @Override
+            public void subscribe(ObservableEmitter<StockInfo> e) throws Exception {
+                StockInfo stockInfo = StockManager.getStockManager().getStockInfo("600016");
+                e.onNext(stockInfo);
+            }
+        }).subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<StockInfo>() {
+                    @Override
+                    public void accept(StockInfo o) throws Exception {
+                        Log.e(TAG, "accept: " + o);
+                        showPbChart(o.getPastYear(StockConfig.PB_YEAR_COUNT), o.getPbPosition(StockConfig.PB_YEAR_COUNT, 0.2f),
+                                o.getPbPosition(StockConfig.PB_YEAR_COUNT, 0.5f), o.getPbPosition(StockConfig.PB_YEAR_COUNT, 0.8f));
+                        showRoeChart(o.getPastRoeYearReporters(StockConfig.ROE_SHOW_YEAR_COUNT));
+                        showBenefitChart(StockConfig.BENEFIT_YEAR_COUNT + 1,
+                                (float) (0.01 * o.getRoeAverageRoe(StockConfig.ROE_SHOW_YEAR_COUNT) * StockConfig.FUTURE_ROE_RATIO),
+                                o.getNowPb(), o.getPbPosition(StockConfig.PB_YEAR_COUNT, StockConfig.SELL_PB_POSITION));
+                    }
+                });
     }
 
-    private void showPbChart(final List<Pb> pbs) {
+    private void showPbChart(final List<Pb> pbs, final float pb20, final float pb50, final float pb80) {
         final LoadingView loadingView = (LoadingView) findViewById(R.id.mPbLoadingView);
         final LineChart chart = (LineChart) findViewById(R.id.mPbChart);
         Observable.just(pbs).flatMap(new Function<List<Pb>, ObservableSource<LineData>>() {
             @Override
             public ObservableSource<LineData> apply(List<Pb> roes) throws Exception {
+                LineData lineData = new LineData();
+
                 List<Entry> roeEntries = new ArrayList<Entry>();
+                List<Entry> pb20s = new ArrayList<Entry>();
+                List<Entry> pb50s = new ArrayList<Entry>();
+                List<Entry> pb80s = new ArrayList<Entry>();
                 for (int i = 0; i < roes.size(); i++) {
                     roeEntries.add(new Entry(i, roes.get(i).pb));
+                    pb20s.add(new Entry(i, pb20));
+                    pb50s.add(new Entry(i, pb50));
+                    pb80s.add(new Entry(i, pb80));
                 }
                 LineDataSet set = new LineDataSet(roeEntries, "pb");
-                LineData lineData = new LineData();
+                set.setDrawCircles(false);
+
+                LineDataSet set20 = new LineDataSet(pb20s, "pb20");
+                set20.setDrawCircles(false);
+                set20.setLineWidth(1);
+                set20.setColor(Color.GREEN);
+                set20.setFormLineWidth(1);
+                set20.setHighlightLineWidth(1);
+                set20.setFormLineDashEffect(new DashPathEffect(new float[]{1f, 2f}, 2f));
+
+                LineDataSet set50 = new LineDataSet(pb50s, "pb50");
+                set50.setDrawCircles(false);
+                set50.setLineWidth(1);
+                set50.setColor(Color.YELLOW);
+                set50.setFormLineWidth(1);
+                set50.setHighlightLineWidth(1);
+                set50.setFormLineDashEffect(new DashPathEffect(new float[]{1f, 2f}, 2f));
+
+                LineDataSet set80 = new LineDataSet(pb80s, "pb80");
+                set80.setDrawCircles(false);
+                set80.setLineWidth(1);
+                set80.setColor(Color.RED);
+                set80.setFormLineWidth(1);
+                set80.setHighlightLineWidth(1);
+                set80.setFormLineDashEffect(new DashPathEffect(new float[]{1f, 2f}, 2f));
+
                 lineData.addDataSet(set);
+                lineData.addDataSet(set20);
+                lineData.addDataSet(set50);
+                lineData.addDataSet(set80);
                 return Observable.just(lineData);
             }
         }).subscribeOn(Schedulers.computation())
@@ -95,11 +165,7 @@ public class StockDetailActivity extends AppCompatActivity {
                                 return pbs.get(index).date;
                             }
                         });
-                        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-                        chart.getXAxis().setEnabled(true);
-                        chart.getAxisRight().setEnabled(false);
-
-                        chart.animateXY(2000, 2000);
+                        makeChartInit(chart);
                         chart.setData(lineData);
                     }
                 });
@@ -113,9 +179,11 @@ public class StockDetailActivity extends AppCompatActivity {
             public ObservableSource<LineData> apply(List<Roe> roes) throws Exception {
                 List<Entry> roeEntries = new ArrayList<Entry>();
                 for (int i = 0; i < roes.size(); i++) {
-                    roeEntries.add(new Entry(i, roes.get(i).roe));
+                    roeEntries.add(new Entry(i, roes.get(i).weightedroe));
                 }
-                LineDataSet set = new LineDataSet(roeEntries, "roe");
+                LineDataSet set = new LineDataSet(roeEntries, "weightedroe");
+                set.setCircleRadius(StockConfig.CIRCLE_RADIUS);
+                set.setCubicIntensity(StockConfig.CUBIC_INTENSITY);
                 LineData lineData = new LineData();
                 lineData.addDataSet(set);
                 return Observable.just(lineData);
@@ -129,14 +197,11 @@ public class StockDetailActivity extends AppCompatActivity {
                         chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
                             @Override
                             public String getFormattedValue(float value, AxisBase axis) {
-                                return roes.get((int) value).date;
+                                return roes.get((int) value).reportdate;
                             }
                         });
-                        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-                        chart.getXAxis().setEnabled(true);
-                        chart.getAxisRight().setEnabled(false);
-
-                        chart.animateXY(2000, 2000);
+                        makeChartInit(chart);
+                        chart.getXAxis().setLabelCount(roes.size(), true);
                         chart.setData(lineData);
                     }
                 });
@@ -158,10 +223,18 @@ public class StockDetailActivity extends AppCompatActivity {
                     sells.add(new Entry(i, (priceSell - pbBuy) / pbBuy));
                 }
                 LineDataSet pureSet = new LineDataSet(pures, "pure");
-                pureSet.setCubicIntensity(0.2f);
+                pureSet.setCircleRadius(StockConfig.CIRCLE_RADIUS);
+                pureSet.setCubicIntensity(StockConfig.CUBIC_INTENSITY);
                 pureSet.setColor(Color.GREEN);
+                pureSet.setValueTextSize(10);
                 sets.add(pureSet);
-                sets.add(new LineDataSet(sells, "sells"));
+
+                LineDataSet sellSet = new LineDataSet(sells, "sells");
+                sellSet.setCircleRadius(StockConfig.CIRCLE_RADIUS);
+                sellSet.setCubicIntensity(StockConfig.CUBIC_INTENSITY);
+                sellSet.setValueTextSize(10);
+                sets.add(sellSet);
+
                 e.onNext(sets);
             }
         }).subscribeOn(Schedulers.computation())
@@ -180,12 +253,12 @@ public class StockDetailActivity extends AppCompatActivity {
                                 return "y" + value;
                             }
                         });
-                        mChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-                        mChart.getXAxis().setEnabled(true);
-                        mChart.getAxisRight().setEnabled(false);
-
-                        mChart.animateXY(2000, 2000);
+                        makeChartInit(mChart);
+                        mChart.getXAxis().setLabelCount(maxYear / 2);
                         mChart.setData(lineData);
+
+                        TextView benefitDetailTextView = (TextView) findViewById(R.id.mBenefitDetailTextView);
+                        benefitDetailTextView.setText(String.format("roe:%.2f%%,pbBuy:%.2f,pbSell:%.2f", roe * 100, pbBuy, pbSell));
                     }
                 });
     }

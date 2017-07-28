@@ -8,8 +8,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.netease.bobo.pathdemo.stock.detail.StockDetailActivity;
+import com.netease.bobo.pathdemo.util.FileUtil;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -79,5 +81,22 @@ public class MainActivity extends AppCompatActivity {
 
     public void onDetailViewClicked(View view) {
         StockDetailActivity.start(view.getContext());
+    }
+
+    public void onClearCacheClicked(View view) {
+        Observable.create(new ObservableOnSubscribe<Object>() {
+            @Override
+            public void subscribe(ObservableEmitter<Object> e) throws Exception {
+                FileUtil.clearAll();
+                e.onNext("clear cache success");
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        Toast.makeText(MainActivity.this, String.valueOf(o), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

@@ -15,4 +15,13 @@ public class Pb {
         this.date = date;
         this.pb = pb;
     }
+
+    @Override
+    public String toString() {
+        return "Pb{" +
+                "date='" + date + '\'' +
+                ", pb=" + pb +
+                '}';
+    }
+
 }
