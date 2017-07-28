@@ -105,7 +105,7 @@ public class SListActivity extends AppCompatActivity {
                                         .subscribe(new Consumer<Object>() {
                                             @Override
                                             public void accept(Object o) throws Exception {
-                                                Toast.makeText(SListActivity.this, String.valueOf(o), Toast.LENGTH_SHORT).show();
+                                                refreshData();
                                             }
                                         });
                             }
