@@ -101,7 +101,7 @@ public class StockDetailActivity extends AppCompatActivity {
                         Log.e(TAG, "accept: " + o);
                         showPbChart(o.getPastYear(StockConfig.PB_YEAR_COUNT), o.getPbPosition(StockConfig.PB_YEAR_COUNT, 0.2f),
                                 o.getPbPosition(StockConfig.PB_YEAR_COUNT, 0.5f), o.getPbPosition(StockConfig.PB_YEAR_COUNT, 0.8f));
-                        showRoeChart(o.getPastRoeYearReporters(StockConfig.ROE_SHOW_YEAR_COUNT));
+                        showRoeChart(o.getPastRoeYearReporters(StockConfig.ROE_SHOW_YEAR_COUNT), o.getRoeAverageRoe(StockConfig.ROE_SHOW_YEAR_COUNT));
                         showBenefitChart(StockConfig.BENEFIT_YEAR_COUNT + 1,
                                 (float) (0.01 * o.getRoeAverageRoe(StockConfig.ROE_SHOW_YEAR_COUNT) * StockConfig.FUTURE_ROE_RATIO),
                                 o.getNowPb(), o.getPbPosition(StockConfig.PB_YEAR_COUNT, StockConfig.SELL_PB_POSITION));
@@ -175,11 +175,14 @@ public class StockDetailActivity extends AppCompatActivity {
                         });
                         makeChartInit(chart);
                         chart.setData(lineData);
+
+                        TextView mPbDetailTextView = (TextView) findViewById(R.id.mPbDetailTextView);
+                        mPbDetailTextView.setText(String.format("pbNow:%.2f,pb20:%.2f,pb50:%.2f,pb80:%.2f", pbs.get(pbs.size() - 1).pb, pb20, pb50, pb80));
                     }
                 });
     }
 
-    private void showRoeChart(final List<Roe> roes) {
+    private void showRoeChart(final List<Roe> roes, final float averageRoe) {
         final LoadingView loadingView = (LoadingView) findViewById(R.id.mRoeBenefitLoadingView);
         final LineChart chart = (LineChart) findViewById(R.id.mRoeChart);
         Observable.just(roes).flatMap(new Function<List<Roe>, ObservableSource<LineData>>() {
@@ -211,6 +214,9 @@ public class StockDetailActivity extends AppCompatActivity {
                         makeChartInit(chart);
                         chart.getXAxis().setLabelCount(roes.size(), true);
                         chart.setData(lineData);
+
+                        TextView mRoeDetailTextView = (TextView) findViewById(R.id.mRoeDetailTextView);
+                        mRoeDetailTextView.setText(String.format("average.roe:%.2f", averageRoe));
                     }
                 });
     }

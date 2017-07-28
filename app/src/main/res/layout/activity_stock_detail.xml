@@ -36,6 +36,15 @@
                         android:textColor="@android:color/white"
                         android:textSize="14sp"
                         android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/mPbDetailTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|right"
+                        android:layout_marginRight="12dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"/>
                 </FrameLayout>
 
                 <FrameLayout
@@ -75,6 +84,15 @@
                         android:textColor="@android:color/white"
                         android:textSize="14sp"
                         android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/mRoeDetailTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|right"
+                        android:layout_marginRight="12dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"/>
                 </FrameLayout>
 
                 <FrameLayout
