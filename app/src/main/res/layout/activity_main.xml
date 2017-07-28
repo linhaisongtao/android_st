@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.netease.bobo.pathdemo.MainActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.netease.bobo.pathdemo.PathView
+            android:id="@+id/mPathView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <View
+            android:id="@+id/mDotView"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/red_circle"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="去Detail"
+            android:onClick="onDetailViewClicked"
+            android:textSize="16sp"
+            android:textStyle="bold|italic"/>
+
+    </FrameLayout>
+
+</android.support.constraint.ConstraintLayout>
