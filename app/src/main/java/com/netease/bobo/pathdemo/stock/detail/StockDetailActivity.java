@@ -77,6 +77,7 @@ public class StockDetailActivity extends AppCompatActivity {
         x.setGridLineWidth(1);
         x.setGridColor(R.color.transGray);
         x.setGridDashedLine(new DashPathEffect(new float[]{1f, 2f}, 5f));
+        x.setDrawGridLines(false);
 
         chart.setTouchEnabled(false);
     }
