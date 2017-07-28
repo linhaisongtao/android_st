@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.netease.bobo.pathdemo.stock.detail.StockDetailActivity;
+import com.netease.bobo.pathdemo.stock.list.SListActivity;
 import com.netease.bobo.pathdemo.util.FileUtil;
 
 import io.reactivex.Observable;
@@ -98,5 +99,9 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, String.valueOf(o), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    public void onToListClicked(View view) {
+        SListActivity.start(view.getContext());
     }
 }

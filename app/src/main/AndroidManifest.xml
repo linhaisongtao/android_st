@@ -7,12 +7,12 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name=".App"
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
@@ -26,6 +26,12 @@
 
         <activity
             android:name=".stock.detail.StockDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".stock.list.SListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".stock.add.SAddActivity"
             android:screenOrientation="portrait"/>
     </application>
 

@@ -23,6 +23,7 @@ import com.netease.bobo.pathdemo.R;
 import com.netease.bobo.pathdemo.stock.StockConfig;
 import com.netease.bobo.pathdemo.stock.model.Pb;
 import com.netease.bobo.pathdemo.stock.model.Roe;
+import com.netease.bobo.pathdemo.stock.model.SBasicInfo;
 import com.netease.bobo.pathdemo.stock.model.StockInfo;
 import com.netease.bobo.pathdemo.stock.model.StockManager;
 import com.netease.bobo.pathdemo.widget.LoadingView;
@@ -45,9 +46,15 @@ import io.reactivex.schedulers.Schedulers;
 
 public class StockDetailActivity extends AppCompatActivity {
     private static final String TAG = "StockDetailActivity";
+    private SBasicInfo mInfo;
 
     public static void start(Context context) {
+        start(context, new SBasicInfo("600016", "msyh"));
+    }
+
+    public static void start(Context context, SBasicInfo info) {
         Intent intent = new Intent(context, StockDetailActivity.class);
+        intent.putExtra("info", info);
         context.startActivity(intent);
     }
 
@@ -75,15 +82,16 @@ public class StockDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle("S");
-        setContentView(R.layout.activity_stock_detail);
 
-        showBenefitChart(11, 0.2f, 2f, 1.6f);
+        mInfo = (SBasicInfo) getIntent().getSerializableExtra("info");
+        getSupportActionBar().setTitle(mInfo.name + "[" + mInfo.code + "]");
+
+        setContentView(R.layout.activity_stock_detail);
 
         Observable.create(new ObservableOnSubscribe<StockInfo>() {
             @Override
             public void subscribe(ObservableEmitter<StockInfo> e) throws Exception {
-                StockInfo stockInfo = StockManager.getStockManager().getStockInfo("600016");
+                StockInfo stockInfo = StockManager.getStockManager().getStockInfo(mInfo.code);
                 e.onNext(stockInfo);
             }
         }).subscribeOn(Schedulers.io())

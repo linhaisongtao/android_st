@@ -27,6 +27,7 @@ public class StockManager {
     private static final String TAG = "StockManager";
     private static StockManager sStockManager = new StockManager();
     private Map<String, StockInfo> mStockInfoMap = new HashMap<>();
+    private List<SBasicInfo> mSBasicInfos = new ArrayList<>();
 
     public static StockManager getStockManager() {
         return sStockManager;
@@ -54,7 +55,7 @@ public class StockManager {
     private StockInfo getStockInfoFromStorage(String code) {
         Log.i(TAG, "getStockInfoFromStorage: read stock_info from storage " + code);
         String fileName = "stock_info_" + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + "_" + code + ".json";
-        String content = FileUtil.read(fileName);
+        String content = FileUtil.read(FileUtil.openFile(fileName));
         StockInfo stockInfo = JSON.parseObject(content, StockInfo.class);
         return stockInfo;
     }
@@ -62,7 +63,7 @@ public class StockManager {
     private void saveStockInfoToStorage(String code, StockInfo info) {
         Log.i(TAG, "saveStockInfoToStorage: save stock_info to storage " + code);
         String fileName = "stock_info_" + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + "_" + code + ".json";
-        FileUtil.write(fileName, JSON.toJSONString(info));
+        FileUtil.write(FileUtil.openFile(fileName), JSON.toJSONString(info));
     }
 
     private StockInfo requestStockInfo(String code) {
@@ -115,7 +116,7 @@ public class StockManager {
             Response response = call.execute();
             String content = response.body().string();
             RoeList roeList = JSON.parseObject(content, RoeList.class);
-            if (roeList != null) {
+            if (roeList != null && roeList.list != null) {
                 Collections.reverse(roeList.list);
                 return roeList.list;
             }
@@ -125,4 +126,51 @@ public class StockManager {
         return null;
     }
 
+    public List<SBasicInfo> getSelectedSList() {
+        if (mSBasicInfos.isEmpty()) {
+            //find from file
+            String content = FileUtil.read(FileUtil.openFile("selected.json"));
+            mSBasicInfos = JSON.parseArray(content, SBasicInfo.class);
+            if (mSBasicInfos == null) {
+                mSBasicInfos = new ArrayList<>();
+            }
+        }
+        return mSBasicInfos;
+    }
+
+    public void addSBasicInfo(SBasicInfo info) {
+        List<SBasicInfo> infos = getSBasicInfos();
+        for (SBasicInfo basicInfo : infos) {
+            if (info.code.equals(basicInfo.code)) {
+                return;
+            }
+        }
+        infos.add(0, info);
+        saveSBasicInfoList();
+    }
+
+    private List<SBasicInfo> getSBasicInfos() {
+        if (mSBasicInfos == null) {
+            mSBasicInfos = new ArrayList<>();
+        }
+        return mSBasicInfos;
+    }
+
+    public void deleteSBasicInfo(String code) {
+        if (mSBasicInfos != null) {
+            for (int i = mSBasicInfos.size() - 1; i >= 0; i--) {
+                if (code.equals(mSBasicInfos.get(i).code)) {
+                    mSBasicInfos.remove(i);
+                }
+            }
+        }
+        saveSBasicInfoList();
+    }
+
+    private void saveSBasicInfoList() {
+        if (mSBasicInfos != null) {
+            String jsonString = JSON.toJSONString(mSBasicInfos);
+            FileUtil.write(FileUtil.openFile("selected.json"), jsonString);
+        }
+    }
 }

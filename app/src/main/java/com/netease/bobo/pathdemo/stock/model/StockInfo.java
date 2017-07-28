@@ -63,7 +63,12 @@ public class StockInfo {
             pos = 0.5f;
         }
         int position = (int) (pos * sortedPbs(year).size());
-        return sortedPbs(year).get(position).pb;
+        try {
+            return sortedPbs(year).get(position).pb;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     private List<Pb> sortedPbs(int year) {

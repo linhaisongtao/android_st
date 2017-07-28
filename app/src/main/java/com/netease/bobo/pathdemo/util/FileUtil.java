@@ -27,11 +27,11 @@ public class FileUtil {
         return new File(getRootDir(), fileName);
     }
 
-    public static String read(String fileName) {
+    public static String read(File file) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         InputStream in = null;
         try {
-            in = new FileInputStream(openFile(fileName));
+            in = new FileInputStream(file);
             byte[] buffer = new byte[1024];
             int size = in.read(buffer);
             while (size > 0) {
@@ -58,23 +58,26 @@ public class FileUtil {
         return string;
     }
 
-    public static void write(String fileName, String content) {
-        File file = openFile(fileName);
+    public static void write(File file, String content) {
         BufferedWriter writer = null;
         if (!file.exists()) {
             try {
                 file.createNewFile();
-                writer = new BufferedWriter(new FileWriter(file));
-                writer.write(content);
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
-                if (writer != null) {
-                    try {
-                        writer.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            }
+        }
+        try {
+            writer = new BufferedWriter(new FileWriter(file));
+            writer.write(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
