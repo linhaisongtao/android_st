@@ -102,12 +102,16 @@ public class StockDetailActivity extends AppCompatActivity {
                     @Override
                     public void accept(StockInfo o) throws Exception {
                         Log.e(TAG, "accept: " + o);
-                        showPbChart(o.getPastYear(StockConfig.getStockConfig().PB_YEAR_COUNT), o.getPbPosition(StockConfig.getStockConfig().PB_YEAR_COUNT, 0.2f),
-                                o.getPbPosition(StockConfig.getStockConfig().PB_YEAR_COUNT, 0.5f), o.getPbPosition(StockConfig.getStockConfig().PB_YEAR_COUNT, 0.8f));
-                        showRoeChart(o.getPastRoeYearReporters(StockConfig.getStockConfig().ROE_SHOW_YEAR_COUNT), o.getRoeAverageRoe(StockConfig.getStockConfig().AVERAGE_ROE_COUNT));
-                        showBenefitChart(StockConfig.getStockConfig().BENEFIT_YEAR_COUNT,
-                                (float) (0.01 * o.getRoeAverageRoe(StockConfig.getStockConfig().AVERAGE_ROE_COUNT) * StockConfig.getStockConfig().FUTURE_ROE_RATIO),
-                                o.getNowPb(), o.getPbPosition(StockConfig.getStockConfig().PB_YEAR_COUNT, StockConfig.getStockConfig().SELL_PB_POSITION));
+                        try {
+                            showPbChart(o.getPastYear(StockConfig.getStockConfig().PB_YEAR_COUNT), o.getPbPosition(StockConfig.getStockConfig().PB_YEAR_COUNT, 0.2f),
+                                    o.getPbPosition(StockConfig.getStockConfig().PB_YEAR_COUNT, 0.5f), o.getPbPosition(StockConfig.getStockConfig().PB_YEAR_COUNT, 0.8f));
+                            showRoeChart(o.getPastRoeYearReporters(StockConfig.getStockConfig().ROE_SHOW_YEAR_COUNT), o.getRoeAverageRoe(StockConfig.getStockConfig().AVERAGE_ROE_COUNT));
+                            showBenefitChart(StockConfig.getStockConfig().BENEFIT_YEAR_COUNT,
+                                    (float) (0.01 * o.getRoeAverageRoe(StockConfig.getStockConfig().AVERAGE_ROE_COUNT) * StockConfig.getStockConfig().FUTURE_ROE_RATIO),
+                                    o.getNowPb(), o.getPbPosition(StockConfig.getStockConfig().PB_YEAR_COUNT, StockConfig.getStockConfig().SELL_PB_POSITION));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
     }
@@ -169,6 +173,9 @@ public class StockDetailActivity extends AppCompatActivity {
                 .subscribe(new Consumer<LineData>() {
                     @Override
                     public void accept(LineData lineData) throws Exception {
+                        if (pbs.size() <= 0) {
+                            return;
+                        }
                         loadingView.hideLoading();
                         chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
                             @Override
@@ -210,6 +217,9 @@ public class StockDetailActivity extends AppCompatActivity {
                 .subscribe(new Consumer<LineData>() {
                     @Override
                     public void accept(LineData lineData) throws Exception {
+                        if (roes.size() <= 0) {
+                            return;
+                        }
                         loadingView.hideLoading();
                         chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
                             @Override
