@@ -177,7 +177,7 @@ public class StockDetailActivity extends AppCompatActivity {
                             }
                         });
                         makeChartInit(chart);
-                        chart.getAxisLeft().setAxisMinimum(0);
+                        chart.getAxisLeft().setAxisMinimum(Math.min(0, lineData.getYMin()));
                         chart.setData(lineData);
 
                         TextView mPbDetailTextView = (TextView) findViewById(R.id.mPbDetailTextView);
@@ -217,7 +217,7 @@ public class StockDetailActivity extends AppCompatActivity {
                         });
                         makeChartInit(chart);
                         chart.getXAxis().setLabelCount(roes.size(), true);
-                        chart.getAxisLeft().setAxisMinimum(0);
+                        chart.getAxisLeft().setAxisMinimum(Math.min(0, lineData.getYMin()));
                         chart.setData(lineData);
 
                         TextView mRoeDetailTextView = (TextView) findViewById(R.id.mRoeDetailTextView);
