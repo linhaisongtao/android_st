@@ -6,8 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,16 +42,24 @@ import io.reactivex.schedulers.Schedulers;
 public class SListActivity extends AppCompatActivity {
     private ListView mListView;
     private SListAdapter mAdapter = new SListAdapter();
+    private String mAssetFileName = null;
+
+    public static void start(Context context, String assetFileName) {
+        Intent intent = new Intent(context, SListActivity.class);
+        intent.putExtra("assetFileName", assetFileName);
+        context.startActivity(intent);
+    }
 
     public static void start(Context context) {
-        context.startActivity(new Intent(context, SListActivity.class));
+        start(context, null);
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_s_list);
-        getSupportActionBar().setTitle("LIST");
+        mAssetFileName = getIntent().getStringExtra("assetFileName");
+        getSupportActionBar().setTitle("LIST " + (TextUtils.isEmpty(mAssetFileName) ? "selected" : mAssetFileName));
 
         mListView = (ListView) findViewById(R.id.mListView);
         mListView.setAdapter(mAdapter);
@@ -144,7 +152,12 @@ public class SListActivity extends AppCompatActivity {
         Observable.create(new ObservableOnSubscribe<List<SBasicInfo>>() {
             @Override
             public void subscribe(ObservableEmitter<List<SBasicInfo>> e) throws Exception {
-                List<SBasicInfo> selectedSList = StockManager.getStockManager().getSelectedSList();
+                List<SBasicInfo> selectedSList = null;
+                if (TextUtils.isEmpty(mAssetFileName)) {
+                    selectedSList = StockManager.getStockManager().getSelectedSList();
+                } else {
+                    selectedSList = StockManager.getStockManager().getSelectedSListFromAsset(mAssetFileName);
+                }
                 e.onNext(selectedSList);
             }
         }).subscribeOn(Schedulers.io())

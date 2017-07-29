@@ -33,4 +33,5 @@ dependencies {
 
     compile "com.squareup.okhttp3:okhttp:3.6.0"
     compile "com.alibaba:fastjson:1.2.9"
+    compile 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
 }

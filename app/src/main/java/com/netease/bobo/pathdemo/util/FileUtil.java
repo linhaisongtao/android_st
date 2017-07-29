@@ -30,8 +30,19 @@ public class FileUtil {
     public static String read(File file) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         InputStream in = null;
+        String string = null;
         try {
             in = new FileInputStream(file);
+            string = read(in);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return string;
+    }
+
+    public static String read(InputStream in) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
             byte[] buffer = new byte[1024];
             int size = in.read(buffer);
             while (size > 0) {
@@ -40,14 +51,6 @@ public class FileUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
         String string = baos.toString();
         try {

@@ -1,8 +1,10 @@
 package com.netease.bobo.pathdemo.stock.model;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.netease.bobo.pathdemo.App;
 import com.netease.bobo.pathdemo.NetUtil;
 import com.netease.bobo.pathdemo.util.FileUtil;
 
@@ -172,5 +174,29 @@ public class StockManager {
             String jsonString = JSON.toJSONString(mSBasicInfos);
             FileUtil.write(FileUtil.openFile("selected.json"), jsonString);
         }
+    }
+
+    public List<SBasicInfo> getSelectedSListFromAsset(String assetFileName) {
+        List<SBasicInfo> infos = new ArrayList<>();
+        try {
+            String content = FileUtil.read(App.getApp().getAssets().open(assetFileName));
+            String[] lines = content.split("\n");
+            for (String line : lines) {
+                if (TextUtils.isEmpty(line)) {
+                    continue;
+                }
+                String[] strings = line.split("  ");
+                if (strings == null || strings.length < 2) {
+                    continue;
+                }
+                SBasicInfo info = new SBasicInfo();
+                info.code = strings[0];
+                info.name = strings[1];
+                infos.add(info);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return infos;
     }
 }

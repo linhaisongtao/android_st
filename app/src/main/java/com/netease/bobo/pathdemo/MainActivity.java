@@ -109,4 +109,8 @@ public class MainActivity extends AppCompatActivity {
     public void onStockSettingClicked(View view) {
         StockSettingActivity.start(view.getContext());
     }
+
+    public void onHS300ListClicked(View view) {
+        SListActivity.start(view.getContext(), "hs300.txt");
+    }
 }
