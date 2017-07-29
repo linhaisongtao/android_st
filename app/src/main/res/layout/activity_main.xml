@@ -59,10 +59,18 @@
                 android:layout_height="50dp"
                 android:gravity="center"
                 android:onClick="onHS300ListClicked"
-                android:text="HS300 List"
+                android:text="沪深300 List"
                 android:textSize="16sp"
                 android:textStyle="bold|italic" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:onClick="onZZ500ListClicked"
+                android:text="中证500 List"
+                android:textSize="16sp"
+                android:textStyle="bold|italic" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"

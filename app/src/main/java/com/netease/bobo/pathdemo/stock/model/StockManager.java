@@ -104,7 +104,7 @@ public class StockManager {
 
     private List<Roe> requestRoeInfo(String code) {
         Log.i(TAG, "requestRoeInfo: read roe from net " + code);
-        String marketName = code.startsWith("6") ? "SH" : "SZ";
+        String marketName = (code.startsWith("6") || code.startsWith("7")) ? "SH" : "SZ";
         long timestamp = System.currentTimeMillis();
         String url = String.format("https://xueqiu.com/stock/f10/finmainindex.json?symbol=%s%s&page=1&size=100&_=%d", marketName, code, timestamp);
         Request.Builder builder = new Request.Builder();

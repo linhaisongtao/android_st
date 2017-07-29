@@ -113,4 +113,8 @@ public class MainActivity extends AppCompatActivity {
     public void onHS300ListClicked(View view) {
         SListActivity.start(view.getContext(), "hs300.txt");
     }
+
+    public void onZZ500ListClicked(View view) {
+        SListActivity.start(view.getContext(), "zz500.txt");
+    }
 }
