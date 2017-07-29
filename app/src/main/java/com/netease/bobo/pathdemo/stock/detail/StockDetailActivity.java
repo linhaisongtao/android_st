@@ -131,6 +131,7 @@ public class StockDetailActivity extends AppCompatActivity {
                     pb80s.add(new Entry(i, pb80));
                 }
                 LineDataSet set = new LineDataSet(roeEntries, "pb");
+                set.setLineWidth(StockConfig.getStockConfig().LINE_WIDTH);
                 set.setDrawCircles(false);
 
                 LineDataSet set20 = new LineDataSet(pb20s, "pb20");
@@ -199,6 +200,7 @@ public class StockDetailActivity extends AppCompatActivity {
                 LineDataSet set = new LineDataSet(roeEntries, "weightedroe");
                 set.setCircleRadius(StockConfig.getStockConfig().CIRCLE_RADIUS);
                 set.setCubicIntensity(StockConfig.getStockConfig().CUBIC_INTENSITY);
+                set.setLineWidth(StockConfig.getStockConfig().LINE_WIDTH);
                 LineData lineData = new LineData();
                 lineData.addDataSet(set);
                 return Observable.just(lineData);
@@ -246,12 +248,14 @@ public class StockDetailActivity extends AppCompatActivity {
                 pureSet.setCubicIntensity(StockConfig.getStockConfig().CUBIC_INTENSITY);
                 pureSet.setColor(Color.GREEN);
                 pureSet.setValueTextSize(10);
+                pureSet.setLineWidth(StockConfig.getStockConfig().LINE_WIDTH);
                 sets.add(pureSet);
 
                 LineDataSet sellSet = new LineDataSet(sells, "sells");
                 sellSet.setCircleRadius(StockConfig.getStockConfig().CIRCLE_RADIUS);
                 sellSet.setCubicIntensity(StockConfig.getStockConfig().CUBIC_INTENSITY);
                 sellSet.setValueTextSize(10);
+                sellSet.setLineWidth(StockConfig.getStockConfig().LINE_WIDTH);
                 sets.add(sellSet);
 
                 e.onNext(sets);

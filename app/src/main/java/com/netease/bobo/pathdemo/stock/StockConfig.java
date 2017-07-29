@@ -21,6 +21,7 @@ public class StockConfig {
     public int PB_YEAR_COUNT = 5;
     public int CIRCLE_RADIUS = 3;
     public float CUBIC_INTENSITY = 0.5f;
+    public float LINE_WIDTH = 2;
 
     public static StockConfig getStockConfig() {
         if (stockConfig == null) {
