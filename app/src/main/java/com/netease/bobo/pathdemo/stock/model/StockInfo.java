@@ -71,6 +71,19 @@ public class StockInfo {
         }
     }
 
+    public float getCurrentPbPosition(int year) {
+        float pbNow = mPbs.get(mPbs.size() - 1).pb;
+        List<Pb> pbs = sortedPbs(year);
+        int length = pbs.size();
+        int position = 0;
+        for (position = 0; position < length; position++) {
+            if (pbNow <= pbs.get(position).pb) {
+                break;
+            }
+        }
+        return (float) (1.0 * position / length);
+    }
+
     private List<Pb> sortedPbs(int year) {
         if (mSortedPbs.get(year) == null || mSortedPbs.get(year).isEmpty()) {
             List<Pb> pbList = getPastYear(year);

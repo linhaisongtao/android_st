@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -35,16 +36,29 @@
                         android:text="Pb"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/mPbDetailTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|right"
+                        android:layout_marginBottom="2dp"
                         android:layout_marginRight="12dp"
                         android:textColor="@android:color/white"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp"
+                        tools:text="pbnow" />
+
+                    <TextView
+                        android:id="@+id/mPbResultTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|right"
+                        android:layout_marginRight="14sp"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        tools:text="pbnow" />
                 </FrameLayout>
 
                 <FrameLayout
@@ -54,13 +68,13 @@
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/mPbChart"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent" />
 
                     <com.netease.bobo.pathdemo.widget.LoadingView
                         android:id="@+id/mPbLoadingView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -83,16 +97,28 @@
                         android:text="Roe"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/mRoeDetailTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|right"
+                        android:layout_marginBottom="2dp"
                         android:layout_marginRight="12dp"
                         android:textColor="@android:color/white"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/mRoeResultTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|right"
+                        android:layout_marginRight="14sp"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        tools:text="pbnow" />
                 </FrameLayout>
 
                 <FrameLayout
@@ -102,13 +128,13 @@
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/mRoeChart"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent" />
 
                     <com.netease.bobo.pathdemo.widget.LoadingView
                         android:id="@+id/mRoeBenefitLoadingView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -131,16 +157,28 @@
                         android:text="Benefit"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/mBenefitDetailTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|right"
+                        android:layout_marginBottom="2dp"
                         android:layout_marginRight="12dp"
                         android:textColor="@android:color/white"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/mBenefitResultTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|right"
+                        android:layout_marginRight="14sp"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        tools:text="pbnow" />
                 </FrameLayout>
 
                 <FrameLayout
@@ -150,13 +188,13 @@
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/chart1"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent" />
 
                     <com.netease.bobo.pathdemo.widget.LoadingView
                         android:id="@+id/mBenefitLoadingView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center" />
                 </FrameLayout>
             </LinearLayout>
 
