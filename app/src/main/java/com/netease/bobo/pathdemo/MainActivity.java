@@ -1,12 +1,9 @@
 package com.netease.bobo.pathdemo;
 
-import android.animation.ObjectAnimator;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Path;
-import android.graphics.RectF;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -25,43 +22,15 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
-    private View mDotView;
-    private PathView mPathView;
+
+    public static void start(Context context) {
+        context.startActivity(new Intent(context, MainActivity.class));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mDotView = findViewById(R.id.mDotView);
-        mPathView = (PathView) findViewById(R.id.mPathView);
-        mDotView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startAnimator();
-            }
-        });
-
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void startAnimator() {
-
-        Path path = makePath();
-        ObjectAnimator animator = ObjectAnimator.ofFloat(mDotView, "x", "y", path);
-        animator.setDuration(3000);
-        animator.start();
-        mPathView.setPath(path);
-    }
-
-    private Path makePath() {
-        Path path = new Path();
-        path.moveTo(0, 0);
-        path.lineTo(100, 400);
-        path.quadTo(150, 500, 200, 200);
-        path.cubicTo(220, 100, 260, 600, 300, 300);
-        path.arcTo(new RectF(0, 0, 600, 600), 180, -90);
-        return path;
     }
 
     public void onDetailViewClicked(View view) {
