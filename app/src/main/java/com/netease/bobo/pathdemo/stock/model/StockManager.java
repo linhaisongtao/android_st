@@ -110,22 +110,26 @@ public class StockManager {
         Request.Builder builder = new Request.Builder();
         builder.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
         builder.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-        builder.addHeader("Cookie", "s=fu11ppjlp2; u=581500552864127; device_id=39db6328c06d3004e8366340fe63bf00; aliyungf_tc=AQAAAJNnvESy/w4A/Tdr2o46dn5T7CjF; xq_a_token=82d9cefaa0793743cb186e53294ec0e61ac2abec; xq_r_token=11b86433a20d1d1eef63ecc12252297196a20e10; __utmt=1; __utma=1.1763699408.1500552864.1500552864.1501223896.2; __utmb=1.4.10.1501223896; __utmc=1; __utmz=1.1500552864.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); Hm_lvt_1db88642e346389874251b5a1eded6e3=1499949737,1500294058,1500552864,1501223896; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1501223911");
+//        builder.addHeader("Cookie", "s=fu11ppjlp2; u=581500552864127; device_id=39db6328c06d3004e8366340fe63bf00; aliyungf_tc=AQAAAJNnvESy/w4A/Tdr2o46dn5T7CjF; xq_a_token=82d9cefaa0793743cb186e53294ec0e61ac2abec; xq_r_token=11b86433a20d1d1eef63ecc12252297196a20e10; __utmt=1; __utma=1.1763699408.1500552864.1500552864.1501223896.2; __utmb=1.4.10.1501223896; __utmc=1; __utmz=1.1500552864.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); Hm_lvt_1db88642e346389874251b5a1eded6e3=1499949737,1500294058,1500552864,1501223896; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1501223911");
         builder.url(url);
         builder.method("GET", null);
         Call call = NetUtil.getOkHttpClient().newCall(builder.build());
         try {
             Response response = call.execute();
-            String content = response.body().string();
-            RoeList roeList = JSON.parseObject(content, RoeList.class);
-            if (roeList != null && roeList.list != null) {
-                Collections.reverse(roeList.list);
-                return roeList.list;
+            if (response.code() == 200) {
+                String content = response.body().string();
+                RoeList roeList = JSON.parseObject(content, RoeList.class);
+                if (roeList != null && roeList.list != null) {
+                    Collections.reverse(roeList.list);
+                    return roeList.list;
+                }
+            } else {
+                refreshXueqiuToken();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public List<SBasicInfo> getSelectedSList() {
@@ -198,5 +202,18 @@ public class StockManager {
             e.printStackTrace();
         }
         return infos;
+    }
+
+    public void refreshXueqiuToken() {
+        Request.Builder builder = new Request.Builder();
+        builder.url("http://www.xueqiu.com");
+        Call call = NetUtil.getOkHttpClient().newCall(builder.build());
+        try {
+            Response response = call.execute();
+            Log.d(TAG, "refreshXueqiuToken: http_code=" + response.code());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
