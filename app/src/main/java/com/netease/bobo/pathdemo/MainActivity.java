@@ -89,10 +89,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onNoneBankClicked(View view) {
-        SListActivity.start(view.getContext(), "country.txt");
+        SListActivity.start(view.getContext(), "consume.txt");
     }
 
     public void onBankClicked(View view) {
-        SListActivity.start(view.getContext(), "consume.txt");
+        SListActivity.start(view.getContext(), "country.txt");
     }
 }
