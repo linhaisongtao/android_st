@@ -39,11 +39,13 @@ public class BenefitChartProcessor {
                 List<LineDataSet> sets = new ArrayList<LineDataSet>();
                 List<Entry> pures = new ArrayList<Entry>();
                 List<Entry> sells = new ArrayList<Entry>();
+                List<Entry> pb1s = new ArrayList<Entry>();
                 for (int i = 0; i < maxYear + 1; i++) {
                     float pure = (float) Math.pow(1 + roe, i);
                     float priceSell = pure * pbSell;
                     pures.add(new Entry(i, pure - 1));
                     sells.add(new Entry(i, (priceSell - pbBuy) / pbBuy));
+                    pb1s.add(new Entry(i, (pure - pbBuy) / pbBuy));
                 }
                 LineDataSet pureSet = new LineDataSet(pures, "pure");
                 pureSet.setCircleRadius(StockConfig.getStockConfig().CIRCLE_RADIUS);
@@ -59,6 +61,14 @@ public class BenefitChartProcessor {
                 sellSet.setValueTextSize(10);
                 sellSet.setLineWidth(StockConfig.getStockConfig().LINE_WIDTH);
                 sets.add(sellSet);
+
+                LineDataSet pb1SellSet = new LineDataSet(pb1s, "pb1Sell");
+                pb1SellSet.setCircleRadius(StockConfig.getStockConfig().CIRCLE_RADIUS);
+                pb1SellSet.setCubicIntensity(StockConfig.getStockConfig().CUBIC_INTENSITY);
+                pb1SellSet.setValueTextSize(10);
+                pb1SellSet.setLineWidth(StockConfig.getStockConfig().LINE_WIDTH);
+                pb1SellSet.setColor(Color.YELLOW);
+                sets.add(pb1SellSet);
 
                 e.onNext(sets);
             }
@@ -86,34 +96,30 @@ public class BenefitChartProcessor {
                         benefitDetailTextView.setText(String.format("roe:%.2f%%,pbBuy:%.2f,pbSell:%.2f", roe * 100, pbBuy, pbSell));
 
                         TextView benefitResultTextView = (TextView) rootView.findViewById(R.id.mBenefitResultTextView);
-                        boolean satisfy5 = false;
-                        boolean satisfy10 = false;
-                        if (maxYear >= 5) {
-                            satisfy5 = satisfy(lineDataSets, 5, 1);
-                        }
-                        if (maxYear >= 10) {
-                            satisfy10 = satisfy(lineDataSets, 10, 3);
-                        }
+                        float p = satisfy(lineDataSets, 5, 1);
                         String msg = "";
-                        if (satisfy5 && satisfy10) {
+                        if (p >= 0.8f) {
                             msg += "满足收益要求";
-                        } else if (satisfy10) {
-                            msg += "仅满足10年要求";
+                        } else if (p >= 0.6) {
+                            msg += "有一定的风险";
                         } else {
                             msg += "不满足要求";
                         }
-                        benefitResultTextView.setText(msg);
+
+                        benefitResultTextView.setText(msg + String.format(",p:%.2f", p));
                     }
                 });
     }
 
-    private boolean satisfy(List<LineDataSet> sets, int index, float value) {
+    private float satisfy(List<LineDataSet> sets, int index, float value) {
+        int totalSetCount = sets.size();
+        int satisfyCount = 0;
         for (LineDataSet set : sets) {
             Entry entry = set.getEntryForIndex(index);
-            if (entry.getY() < value) {
-                return false;
+            if (entry.getY() >= value) {
+                satisfyCount++;
             }
         }
-        return true;
+        return (float) (1.0 * satisfyCount / totalSetCount);
     }
 }
