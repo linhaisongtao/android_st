@@ -183,11 +183,21 @@ public class StockManager {
                 }
                 String[] strings = line.split("  ");
                 if (strings == null || strings.length < 2) {
-                    continue;
+                    strings = line.split("\t");
+                    if (strings == null || strings.length < 2) {
+                        continue;
+                    }
+                    String temp = strings[0];
+                    strings[0] = strings[1];
+                    strings[1] = strings[2];
+                    strings[2] = temp;
                 }
                 SBasicInfo info = new SBasicInfo();
                 info.code = strings[0];
-                info.name = strings[1];
+                info.name = strings[1] + (strings.length >= 3 ? "-" + strings[2] : "");
+                while (info.code.length() < 6) {
+                    info.code = "0" + info.code;
+                }
                 infos.add(info);
             }
         } catch (Exception e) {

@@ -87,4 +87,12 @@ public class MainActivity extends AppCompatActivity {
     public void onZZ500ListClicked(View view) {
         SListActivity.start(view.getContext(), "zz500.txt");
     }
+
+    public void onNoneBankClicked(View view) {
+        SListActivity.start(view.getContext(), "country.txt");
+    }
+
+    public void onBankClicked(View view) {
+        SListActivity.start(view.getContext(), "consume.txt");
+    }
 }

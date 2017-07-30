@@ -68,6 +68,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center"
+                android:onClick="onNoneBankClicked"
+                android:text="消费类 List"
+                android:textSize="16sp"
+                android:textStyle="bold|italic" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:onClick="onBankClicked"
+                android:text="国家基础类 List"
+                android:textSize="16sp"
+                android:textStyle="bold|italic" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
                 android:onClick="onStockSettingClicked"
                 android:text="Stock Setting"
                 android:textSize="16sp"
