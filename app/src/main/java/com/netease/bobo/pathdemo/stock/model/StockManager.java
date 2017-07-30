@@ -131,7 +131,7 @@ public class StockManager {
     }
 
     public List<SBasicInfo> getSelectedSList() {
-        if (mSBasicInfos.isEmpty()) {
+        if (mSBasicInfos == null || mSBasicInfos.isEmpty()) {
             //find from file
             String content = FileUtil.read(FileUtil.openFile("selected.json"));
             mSBasicInfos = JSON.parseArray(content, SBasicInfo.class);
@@ -143,7 +143,7 @@ public class StockManager {
     }
 
     public void addSBasicInfo(SBasicInfo info) {
-        List<SBasicInfo> infos = getSBasicInfos();
+        List<SBasicInfo> infos = getSelectedSList();
         for (SBasicInfo basicInfo : infos) {
             if (info.code.equals(basicInfo.code)) {
                 return;
@@ -153,14 +153,8 @@ public class StockManager {
         saveSBasicInfoList();
     }
 
-    private List<SBasicInfo> getSBasicInfos() {
-        if (mSBasicInfos == null) {
-            mSBasicInfos = new ArrayList<>();
-        }
-        return mSBasicInfos;
-    }
-
     public void deleteSBasicInfo(String code) {
+        mSBasicInfos = getSelectedSList();
         if (mSBasicInfos != null) {
             for (int i = mSBasicInfos.size() - 1; i >= 0; i--) {
                 if (code.equals(mSBasicInfos.get(i).code)) {
