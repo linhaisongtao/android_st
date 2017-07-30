@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * Created by gzdaisongsong@corp.netease.com on 2017/7/28.
@@ -86,18 +87,20 @@ public class FileUtil {
         }
     }
 
-    public static void clearAll() {
-        deleteFileRecursion(getRootDir());
+    public static void clearAll(List<String> whiteList) {
+        deleteFileRecursion(getRootDir(), whiteList);
     }
 
-    private static void deleteFileRecursion(File file) {
+    private static void deleteFileRecursion(File file, List<String> whiteList) {
         Log.i(TAG, "deleteFileRecursion: delete file " + file.getAbsolutePath());
         if (file.isFile()) {
-            file.delete();
+            if (!whiteList.contains(file.getName())) {
+                file.delete();
+            }
         } else if (file.isDirectory()) {
             File[] files = file.listFiles();
             for (File file1 : files) {
-                deleteFileRecursion(file1);
+                deleteFileRecursion(file1, whiteList);
             }
         }
     }

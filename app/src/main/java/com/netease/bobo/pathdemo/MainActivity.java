@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.netease.bobo.pathdemo.stock.StockConfig;
 import com.netease.bobo.pathdemo.stock.detail.StockDetailActivity;
 import com.netease.bobo.pathdemo.stock.list.SListActivity;
 import com.netease.bobo.pathdemo.stock.setting.StockSettingActivity;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                         Observable.create(new ObservableOnSubscribe<Object>() {
                             @Override
                             public void subscribe(ObservableEmitter<Object> e) throws Exception {
-                                FileUtil.clearAll();
+                                FileUtil.clearAll(StockConfig.getStockConfig().WHITE_LIST);
                                 e.onNext("clear cache success");
                             }
                         }).subscribeOn(Schedulers.io())

@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import com.alibaba.fastjson.JSON;
 import com.netease.bobo.pathdemo.App;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by gzdaisongsong@corp.netease.com on 2017/7/28.
  */
@@ -22,6 +25,9 @@ public class StockConfig {
     public int CIRCLE_RADIUS = 3;
     public float CUBIC_INTENSITY = 0.5f;
     public float LINE_WIDTH = 2;
+    public List<String> WHITE_LIST = new ArrayList<String>() {{
+        add("selected.json");
+    }};
 
     public static StockConfig getStockConfig() {
         if (stockConfig == null) {

@@ -13,9 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Request;
@@ -28,7 +26,7 @@ import okhttp3.Response;
 public class StockManager {
     private static final String TAG = "StockManager";
     private static StockManager sStockManager = new StockManager();
-    private Map<String, StockInfo> mStockInfoMap = new HashMap<>();
+    //    private Map<String, StockInfo> mStockInfoMap = new HashMap<>();
     private List<SBasicInfo> mSBasicInfos = new ArrayList<>();
 
     public static StockManager getStockManager() {
@@ -37,7 +35,7 @@ public class StockManager {
 
     public StockInfo getStockInfo(String code) {
         //内存缓存
-        StockInfo info = mStockInfoMap.get(code);
+        StockInfo info = null;
 
         //文件缓存
         if (info == null || info.isEmpty()) {
@@ -46,7 +44,7 @@ public class StockManager {
 
         if (info == null || info.isEmpty()) {
             info = requestStockInfo(code);
-            mStockInfoMap.put(code, info);
+//            mStockInfoMap.put(code, info);
             saveStockInfoToStorage(code, info);
             return info;
         } else {
